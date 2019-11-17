@@ -96,22 +96,45 @@ var _ = {};
   };
 
   // Return all elements of an array that pass a truth test.
-  _.filter = function(collection, test) {};
+  _.filter = function(collection, test) {
+    let newArray = [];
+
+    _.each(collection, item => {
+      if (test(item)) newArray.push(item);
+    });
+
+    return newArray;
+  };
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
+    return _.filter(collection, item => !test(item));
   };
 
   // Produce a duplicate-free version of the array.
-  _.uniq = function(array) {};
+  _.uniq = function(array) {
+    let newArray = [];
+
+    _.each(array, item => _.indexOf(newArray, item) < 0 && newArray.push(item));
+    // _.each(array, item => {
+    //   if (_.indexOf(newArray, item) < 0) newArray.push(item);
+    // });
+
+    return newArray;
+  };
 
   // Return the results of applying an iterator to each element.
   _.map = function(collection, iterator) {
     // map() is a useful primitive iteration function that works a lot
     // like each(), but in addition to running the operation on all
     // the members, it also maintains an array of results.
+    let newArray = [];
+
+    _.each(collection, item => newArray.push(iterator(item)));
+
+    return newArray;
   };
 
   /*
@@ -127,11 +150,18 @@ var _ = {};
     // TIP: map is really handy when you want to transform an array of
     // values into a new array of values. _.pluck() is solved for you
     // as an example of this.
+    return _.map(collection, item => item[key]);
   };
 
   // Calls the method named by methodName on each value in the list.
   // Note: you will nead to learn a bit about .apply to complete this.
-  _.invoke = function(collection, functionOrKey, args) {};
+  _.invoke = function(collection, functionOrKey, args) {
+    return _.map(collection, item => {
+      if (typeof functionOrKey === 'function')
+        return functionOrKey.apply(item, args);
+      return item[functionOrKey].apply(item, args);
+    });
+  };
 
   // Reduces an array or object to a single value by repetitively calling
   // iterator(previousValue, item) for each item. previousValue should be
@@ -146,7 +176,18 @@ var _ = {};
   //   var sum = _.reduce(numbers, function(total, number){
   //     return total + number;
   //   }, 0); // should be 6
-  _.reduce = function(collection, iterator, accumulator) {};
+
+  // Shouldn't reduce be defaulting to the first value and then skipping it? This function has the accumlator defaulting to the first element and then using the element again in _.each
+  // MDN notes 'If initialValue is not provided, reduce() will execute the callback function starting at index 1, skipping the first index. If initialValue is provided, it will start at index 0.'
+  // Updated spec
+  _.reduce = function(collection, iterator, accumulator) {
+    _.each(collection, item => {
+      if (accumulator === undefined) accumulator = item;
+      else accumulator = iterator(accumulator, item);
+    });
+
+    return accumulator;
+  };
 
   // Determine if the array or object contains a given value (using `===`).
   _.contains = function(collection, target) {

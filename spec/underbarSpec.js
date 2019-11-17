@@ -219,8 +219,9 @@ describe('reduce', function() {
   it('should default to the first item in the array', function() {
     var add = function(tally, item) {return tally + item; };
     var total = _.reduce([1, 2, 3], add);
-
-    expect(total).to.equal(7);
+	// Updated test
+    // expect(total).to.equal(7);
+    expect(total).to.equal(6);
   });
 
 });
