@@ -193,17 +193,49 @@ var _ = {};
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
+    return _.reduce(
+      collection,
+      (accumulator, item) => {
+        if (accumulator) return true;
+        // Set accumulator here, check next time around.
+        return (accumulator = item === target);
+      },
+      false
+    );
   };
 
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(
+      collection,
+      (accumulator, item) => {
+        // If any accumulator value is false then return right away
+        if (accumulator) {
+          // Do we have an iterator? If so then run it and cast to boolean
+          if (iterator) return iterator(item) ? true : false;
+          // No iterator. Cast the item to boolean
+          else return item ? true : false;
+        } else {
+          return false;
+        }
+      },
+      true
+    );
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
     // TIP: There's a very clever way to re-use every() here.
+    // We want to force the first truthy value in every to become false. This kicks us out of the iteration with a false value.
+    // We change the false value to true and return it.
+
+    // We want to _.every to fail as soon as there is one truthy value. Handle this in the callback
+    return !_.every(collection, item => {
+      // if not iterator then evaluate each item. Set truthy value to falsy. If we leave it as true then the function keeps running
+      return iterator ? !iterator(item) : !item;
+    });
   };
 
   /**
