@@ -256,11 +256,31 @@ var _ = {};
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {};
+  _.extend = (...obj) => {
+    let newObjProps = obj.slice(1);
+    let newObject = obj[0];
+
+    _.each(newObjProps, item => {
+      _.each(item, (value, key) => {
+        newObject[key] = value;
+      });
+    });
+    return newObject;
+  };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {};
+  _.defaults = (...obj) => {
+    let newObjProps = obj.slice(1);
+    let newObject = obj[0];
+
+    _.each(newObjProps, item => {
+      _.each(item, (value, key) => {
+        if (!newObject.hasOwnProperty(key)) newObject[key] = value;
+      });
+    });
+    return newObject;
+  };
 
   /**
    * FUNCTIONS
@@ -276,10 +296,18 @@ var _ = {};
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
     // time it's called.
+    let hasCalled = false;
+    let result;
 
     // TIP: We'll return a new function that delegates to the old one, but only
     // if it hasn't been called before.
-    return function() {};
+    return function() {
+      if (!hasCalled) {
+        result = func.apply(null, arguments);
+        hasCalled = true;
+      }
+      return result;
+    };
   };
 
   // Memoize an expensive function by storing its results. You may assume
@@ -288,7 +316,17 @@ var _ = {};
   // _.memoize should return a function that when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function(func) {};
+  _.memoize = function(func) {
+    let results = {};
+
+    return function() {
+      if (!results[arguments[0]]) {
+        results[arguments[0]] = func.apply(null, arguments);
+      }
+
+      return results[arguments[0]];
+    };
+  };
 
   // Delays a function for the given number of milliseconds, and then calls
   // it with the arguments supplied.
@@ -296,7 +334,13 @@ var _ = {};
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
-  _.delay = function(func, wait) {};
+  _.delay = function(func, wait) {
+    const args = _.map(arguments, item => item).slice(2);
+
+    setTimeout(function() {
+      func.apply(null, args);
+    }, wait);
+  };
 
   /**
    * ADVANCED COLLECTION OPERATIONS
@@ -308,7 +352,38 @@ var _ = {};
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
-  _.shuffle = function(array) {};
+  _.shuffle = function(array) {
+    // let clonedArray = array.slice();
+    // let result = [];
+
+    // const getRandomNumber = arr => {
+    //   return Math.floor(Math.random() * Math.floor(arr.length));
+    // };
+
+    // for (let i = 0; i >= 0; i--) {
+
+    // }
+    let clonedArray = array.slice();
+    let shuffled = [];
+    let randomIndex;
+    let temp;
+
+    // Loop from back
+    for (let i = clonedArray.length - 1; i >= 0; i--) {
+      // Grab last array element. Set to temp variable
+      temp = clonedArray[i];
+      // Get random index
+      randomIndex = Math.floor(Math.random() * Math.floor(i));
+      // Modify current array element to equal the random index value.
+      clonedArray[i] = clonedArray[randomIndex];
+      // Change whatever random index to our current element. Essentially swaps them
+      clonedArray[randomIndex] = temp;
+      // Remove last element and add to shuffled array
+      shuffled.push(clonedArray.pop());
+    }
+
+    return shuffled;
+  };
 
   /**
    * Note: This is the end of the pre-course curriculum. Feel free to continue,
