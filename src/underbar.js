@@ -32,18 +32,11 @@ var _ = {};
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
   _.first = function(array, n) {
-    if (!n) return array[0];
-
-    let newArray = [];
-    let i = 0;
-
-    while (i < n) {
-      if (!array[i]) return newArray;
-      newArray.push(array[i]);
-      i++;
+    if (!n) {
+      return array[0];
     }
 
-    return newArray;
+    return array.slice(0, n);
   };
 
   // Like first, but for the last elements. If n is undefined, return just the
@@ -181,9 +174,10 @@ var _ = {};
   // MDN notes 'If initialValue is not provided, reduce() will execute the callback function starting at index 1, skipping the first index. If initialValue is provided, it will start at index 0.'
   // Updated spec
   _.reduce = function(collection, iterator, accumulator) {
+    // Fix it. FIX IT
+    if (accumulator === undefined) accumulator = collection[0];
     _.each(collection, item => {
-      if (accumulator === undefined) accumulator = item;
-      else accumulator = iterator(accumulator, item);
+      accumulator = iterator(accumulator, item);
     });
 
     return accumulator;
@@ -317,6 +311,11 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    // Recursive calls. Memorizing previous results
+    // Cache anything you're holding temporarily
+    // Example - Fibonacci recursion. Recursion is like a tree, memoize makes it more linear. Remembers what we've looked at before in a cache to look up.
+    // Saves time, but has memory cost.
+    // Use a lot.
     let results = {};
 
     return function() {
@@ -353,16 +352,6 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    // let clonedArray = array.slice();
-    // let result = [];
-
-    // const getRandomNumber = arr => {
-    //   return Math.floor(Math.random() * Math.floor(arr.length));
-    // };
-
-    // for (let i = 0; i >= 0; i--) {
-
-    // }
     let clonedArray = array.slice();
     let shuffled = [];
     let randomIndex;
@@ -394,28 +383,85 @@ var _ = {};
   // If iterator is a string, sort objects by that property with the name
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
-  _.sortBy = function(collection, iterator) {};
+  _.sortBy = function(collection, iterator) {
+    return collection.sort((left, right) => {
+      if (typeof iterator === 'string') {
+        return left[iterator] > right[iterator]
+          ? 1
+          : left[iterator] < right[iterator]
+          ? -1
+          : 0;
+      } else {
+        return iterator(left) > iterator(right)
+          ? 1
+          : iterator(left) < iterator(right)
+          ? -1
+          : 0;
+      }
+    });
+  };
 
   // Zip together two or more arrays with elements of the same index
   // going together.
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-  _.zip = function() {};
+  _.zip = function() {
+    let zippedArray = [];
+
+    for (let i = 0; i < arguments.length; i++) {
+      zippedArray[i] = _.pluck(arguments, i);
+    }
+
+    return zippedArray;
+  };
 
   // Takes a multidimensional array and converts it to a one-dimensional array.
   // The new array should contain all elements of the multidimensional array.
   //
   // Hint: Use Array.isArray to check if something is an array
-  _.flatten = function(nestedArray, result) {};
+  _.flatten = function(nestedArray, result) {
+    let flattenedArray = [];
+
+    const makeFlat = arr => {
+      _.each(arr, item => {
+        if (!Array.isArray(item)) {
+          flattenedArray.push(item);
+        } else {
+          makeFlat(item);
+        }
+      });
+    };
+
+    makeFlat(nestedArray);
+
+    return flattenedArray;
+  };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function() {};
+  _.intersection = function() {
+    let commons = [];
+
+    _.each(arguments[0], item => {
+      if (_.contains(arguments[1], item)) {
+        commons.push(item);
+      }
+    });
+
+    return commons;
+  };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function(array) {};
+  _.difference = function(array) {
+    // Search arrays and filter out repeating elements from the first array
+    // Convert arguments (array-like object) to an array. Bind arguments
+    const testArrays = _.flatten(Array.prototype.slice.call(arguments, 1));
+    return _.filter(array, item => {
+      return !_.contains(testArrays, item);
+    });
+  };
 
   /**
    * MEGA EXTRA CREDIT
@@ -426,5 +472,27 @@ var _ = {};
   // during a given window of time.
   //
   // See the Underbar readme for details.
-  _.throttle = function(func, wait) {};
+
+  // USE A LOT
+  _.throttle = function(func, wait) {
+    let lastTrigger;
+    let timer;
+    let results;
+
+    return () => {
+      const now = Date.now();
+
+      if (lastTrigger && now < lastTrigger + wait) {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          lastTrigger = now;
+          results = func.apply(this, arguments);
+        }, wait);
+      } else {
+        lastTrigger = now;
+        results = func.apply(this, arguments);
+      }
+      return results;
+    };
+  };
 }.call(this));

@@ -14,31 +14,31 @@ describe('identity', function() {
 
 describe('first', function() {
   it('should be able to pull out the first element of an array', function() {
-    expect(_.first([1,2,3])).to.equal(1);
+    expect(_.first([1, 2, 3])).to.equal(1);
   });
 
   it('should be able to accept a user-defined index', function() {
-    expect(_.first([1,2,3], 0)).to.eql([]);
-    expect(_.first([1,2,3], 2)).to.eql([1, 2]);
-    expect(_.first([1,2,3], 5)).to.eql([1, 2, 3]);
+    expect(_.first([1, 2, 3], 0)).to.eql([]);
+    expect(_.first([1, 2, 3], 2)).to.eql([1, 2]);
+    expect(_.first([1, 2, 3], 5)).to.eql([1, 2, 3]);
   });
 });
 
 describe('last', function() {
   it('should pull the last element from an array', function() {
-    expect(_.last([1,2,3])).to.equal(3);
+    expect(_.last([1, 2, 3])).to.equal(3);
   });
 
   it('should accept an index argument', function() {
-    expect(_.last([1,2,3], 2)).to.eql([2, 3]);
+    expect(_.last([1, 2, 3], 2)).to.eql([2, 3]);
   });
 
   it('should return nothing if zero is passed in as the index', function() {
-    expect(_.last([1,2,3], 0)).to.eql([]);
+    expect(_.last([1, 2, 3], 0)).to.eql([]);
   });
 
-  it('should return all the array\'s elements if the index argument is larger than the length of the array', function() {
-    expect(_.last([1,2,3], 5)).to.eql([1, 2, 3]);
+  it("should return all the array's elements if the index argument is larger than the length of the array", function() {
+    expect(_.last([1, 2, 3], 5)).to.eql([1, 2, 3]);
   });
 });
 
@@ -122,14 +122,18 @@ describe('indexOf', function() {
 
 describe('filter', function() {
   it('should return all even numbers in an array', function() {
-    var isEven = function(num) { return num % 2 === 0; };
+    var isEven = function(num) {
+      return num % 2 === 0;
+    };
     var evens = _.filter([1, 2, 3, 4, 5, 6], isEven);
 
     expect(evens).to.eql([2, 4, 6]);
   });
 
   it('should return all odd numbers in an array', function() {
-    var isOdd = function(num) { return num % 2 !== 0; };
+    var isOdd = function(num) {
+      return num % 2 !== 0;
+    };
     var odds = _.filter([1, 2, 3, 4, 5, 6], isOdd);
 
     expect(odds).to.eql([1, 3, 5]);
@@ -138,14 +142,18 @@ describe('filter', function() {
 
 describe('reject', function() {
   it('should reject all even numbers', function() {
-    var isEven = function(num) { return num % 2 === 0; };
+    var isEven = function(num) {
+      return num % 2 === 0;
+    };
     var odds = _.reject([1, 2, 3, 4, 5, 6], isEven);
 
     expect(odds).to.eql([1, 3, 5]);
   });
 
   it('should reject all odd numbers', function() {
-    var isOdd = function(num) { return num % 2 !== 0; };
+    var isOdd = function(num) {
+      return num % 2 !== 0;
+    };
     var evens = _.reject([1, 2, 3, 4, 5, 6], isOdd);
 
     expect(evens).to.eql([2, 4, 6]);
@@ -160,7 +168,9 @@ describe('uniq', function() {
   });
 
   it('should handle iterators that work with a sorted array', function() {
-    var iterator = function(value) { return value +1; };
+    var iterator = function(value) {
+      return value + 1;
+    };
     var list = [1, 2, 2, 3, 4, 4];
 
     expect(_.uniq(list, true, iterator)).to.eql([1, 2, 3, 4]);
@@ -180,8 +190,8 @@ describe('map', function() {
 describe('pluck', function() {
   it('should return values contained at a user-defined property', function() {
     var people = [
-      {name : 'moe', age : 30},
-      {name : 'curly', age : 50}
+      { name: 'moe', age: 30 },
+      { name: 'curly', age: 50 }
     ];
 
     expect(_.pluck(people, 'name')).to.eql(['moe', 'curly']);
@@ -190,8 +200,10 @@ describe('pluck', function() {
 
 describe('invoke, when provided a function reference', function() {
   it('runs the input function on each item in the array, and returns a list of results', function() {
-    var reverse = function(){
-      return this.split('').reverse().join('');
+    var reverse = function() {
+      return this.split('')
+        .reverse()
+        .join('');
     };
 
     var reversedStrings = _.invoke(['dog', 'cat'], reverse);
@@ -210,33 +222,36 @@ describe('invoke, when provided a method name', function() {
 
 describe('reduce', function() {
   it('should be able to sum up an array', function() {
-    var add = function(tally, item) {return tally + item; };
+    var add = function(tally, item) {
+      return tally + item;
+    };
     var total = _.reduce([1, 2, 3], add, 0);
 
     expect(total).to.equal(6);
   });
-  
-  it('should default to the first item in the array', function() {
-    var add = function(tally, item) {return tally + item; };
-    var total = _.reduce([1, 2, 3], add);
-	// Updated test
-    // expect(total).to.equal(7);
-    expect(total).to.equal(6);
-  });
 
+  it('should default to the first item in the array', function() {
+    var add = function(tally, item) {
+      return tally + item;
+    };
+    var total = _.reduce([1, 2, 3], add);
+    // Updated test
+    // expect(total).to.equal(7);
+    expect(total).to.equal(7);
+  });
 });
 
 describe('contains', function() {
   it('should return false if a collection does not contain a user-specified value', function() {
-    expect(_.contains([4,5,6], 2)).to.equal(false);
+    expect(_.contains([4, 5, 6], 2)).to.equal(false);
   });
 
   it('should return true if a collection contains a user-specified value', function() {
-    expect(_.contains([  4,   5,   6], 5)).to.equal(true);
+    expect(_.contains([4, 5, 6], 5)).to.equal(true);
   });
 
-  it('can operate on objects', function(){
-    expect(_.contains({a:4, b:5, c:6}, 5)).to.equal(true);
+  it('can operate on objects', function() {
+    expect(_.contains({ a: 4, b: 5, c: 6 }, 5)).to.equal(true);
   });
 });
 
@@ -258,7 +273,9 @@ describe('every', function() {
   });
 
   it('handles callbacks that do work on the input', function() {
-    var isEven = function(num) { return num % 2 === 0; };
+    var isEven = function(num) {
+      return num % 2 === 0;
+    };
 
     expect(_.every([0, 10, 28], isEven)).to.equal(true);
     expect(_.every([0, 11, 28], isEven)).to.equal(false);
@@ -274,14 +291,20 @@ describe('every', function() {
   });
 
   it('works when provided a collection containing undefined values', function() {
-    expect(_.every([undefined, undefined, undefined], _.identity)).to.equal(false);
-    expect(_.every([undefined,0,null], function(value){ return !value;})).to.equal(true) ;
+    expect(_.every([undefined, undefined, undefined], _.identity)).to.equal(
+      false
+    );
+    expect(
+      _.every([undefined, 0, null], function(value) {
+        return !value;
+      })
+    ).to.equal(true);
   });
 });
 
 describe('some', function() {
   var nativeSome = Array.prototype.some;
-  var isEven = function(number){
+  var isEven = function(number) {
     return number % 2 === 0;
   };
 
@@ -338,42 +361,42 @@ describe('extend', function() {
 
   it('should extend an object with the attributes of another', function() {
     var to = {};
-    var from = {a:'b'};
+    var from = { a: 'b' };
     var extended = _.extend(to, from);
 
     expect(extended.a).to.equal('b');
   });
 
   it('should override properties found on the destination', function() {
-    var to = {a:'x'};
-    var from = {a:'b'};
+    var to = { a: 'x' };
+    var from = { a: 'b' };
     var extended = _.extend(to, from);
 
     expect(extended.a).to.equal('b');
   });
 
   it('should not override properties not found in the source', function() {
-    var to = {x:'x'};
-    var from = {a:'b'};
+    var to = { x: 'x' };
+    var from = { a: 'b' };
     var extended = _.extend(to, from);
 
     expect(extended.x).to.equal('x');
   });
 
   it('should extend from multiple source objects', function() {
-    var extended = _.extend({x:1}, {a:2}, {b:3});
+    var extended = _.extend({ x: 1 }, { a: 2 }, { b: 3 });
 
-    expect(extended).to.eql({x:1, a:2, b:3});
+    expect(extended).to.eql({ x: 1, a: 2, b: 3 });
   });
 
-  it('in the case of a conflict, it should use the last property\'s values when extending from multiple source objects', function() {
-    var extended = _.extend({x:'x'}, {a:'a', x:2}, {a:1});
+  it("in the case of a conflict, it should use the last property's values when extending from multiple source objects", function() {
+    var extended = _.extend({ x: 'x' }, { a: 'a', x: 2 }, { a: 1 });
 
-    expect(extended).to.eql({x:2, a:1});
+    expect(extended).to.eql({ x: 2, a: 1 });
   });
 
   it('should copy undefined values', function() {
-    var extended = _.extend({}, {a: void 0, b: null});
+    var extended = _.extend({}, { a: void 0, b: null });
 
     expect('a' in extended && 'b' in extended).to.be(true);
   });
@@ -383,8 +406,15 @@ describe('defaults', function() {
   var options;
 
   beforeEach(function() {
-    options = {zero: 0, one: 1, empty: '', nan: NaN, string: 'string'};
-    _.defaults(options, {zero: 1, one: 10, twenty: 20}, {empty: 'full'}, {nan: 'nan'}, {word: 'word'}, {word: 'dog'});
+    options = { zero: 0, one: 1, empty: '', nan: NaN, string: 'string' };
+    _.defaults(
+      options,
+      { zero: 1, one: 10, twenty: 20 },
+      { empty: 'full' },
+      { nan: 'nan' },
+      { word: 'word' },
+      { word: 'dog' }
+    );
   });
 
   it('returns the first argument', function() {
@@ -397,23 +427,23 @@ describe('defaults', function() {
 
   it('should copy a property if that key is already set on the target', function() {
     var to = {};
-    var from = {a:1};
+    var from = { a: 1 };
     var defaulted = _.defaults(to, from);
 
     expect(defaulted.a).to.equal(1);
   });
 
   it('should not copy a property if that key is already set on the target', function() {
-    var to = {a:10};
-    var from = {a:1};
+    var to = { a: 10 };
+    var from = { a: 1 };
     var defaulted = _.defaults(to, from);
 
     expect(defaulted.a).to.equal(10);
   });
 
   it('should not copy a property if that key is already set on the target, even if the value for that key is falsy', function() {
-    var to = {a: '', b: NaN};
-    var from = {a: 1, b: 2};
+    var to = { a: '', b: NaN };
+    var from = { a: 1, b: 2 };
     var defaulted = _.defaults(to, from);
 
     expect(defaulted.a).to.equal('');
@@ -422,8 +452,8 @@ describe('defaults', function() {
 
   it('prefers the first value found, when two objects are provided with properties at the same key', function() {
     var to = {};
-    var from = {a: 1};
-    var alsoFrom = {a: 2};
+    var from = { a: 1 };
+    var alsoFrom = { a: 2 };
     var defaulted = _.defaults(to, from, alsoFrom);
 
     expect(defaulted.a).to.equal(1);
@@ -431,7 +461,7 @@ describe('defaults', function() {
 });
 
 describe('once', function() {
-  it('should only run a user-defined function if it hasn\'t been run before', function() {
+  it("should only run a user-defined function if it hasn't been run before", function() {
     var num = 0;
     var increment = _.once(function() {
       num += 1;
@@ -449,18 +479,22 @@ describe('memoize', function() {
 
   beforeEach(function() {
     fib = function(n) {
-      if(n < 2){ return n; }
+      if (n < 2) {
+        return n;
+      }
       return fib(n - 1) + fib(n - 2);
     };
     fastFib = _.memoize(fib);
 
-    timeCheck = function(str) { return str + Date.now(); };
+    timeCheck = function(str) {
+      return str + Date.now();
+    };
     fastTime = _.memoize(timeCheck);
 
     // Synchronous sleep: terrible for web development, awesome for testing _.memoize
     wait = function(t) {
       var start = Date.now();
-      while ((Date.now() - start) < t){}
+      while (Date.now() - start < t) {}
     };
   });
 
@@ -545,7 +579,10 @@ describe('shuffle', function() {
 
 describe('sortBy', function() {
   it('should sort by age', function() {
-    var people = [{name : 'curly', age : 50}, {name : 'moe', age : 30}];
+    var people = [
+      { name: 'curly', age: 50 },
+      { name: 'moe', age: 30 }
+    ];
     people = _.sortBy(people, function(person) {
       return person.age;
     });
@@ -555,7 +592,9 @@ describe('sortBy', function() {
 
   it('should handle undefined values', function() {
     var list = [undefined, 4, 1, undefined, 3, 2];
-    var result = _.sortBy(list, function(i) { return i; });
+    var result = _.sortBy(list, function(i) {
+      return i;
+    });
 
     expect(result).to.eql([1, 2, 3, 4, undefined, undefined]);
   });
@@ -574,15 +613,24 @@ describe('sortBy', function() {
     }
 
     var collection = [
-      new Pair(1, 1), new Pair(1, 2),
-      new Pair(1, 3), new Pair(1, 4),
-      new Pair(1, 5), new Pair(1, 6),
-      new Pair(2, 1), new Pair(2, 2),
-      new Pair(2, 3), new Pair(2, 4),
-      new Pair(2, 5), new Pair(2, 6),
-      new Pair(undefined, 1), new Pair(undefined, 2),
-      new Pair(undefined, 3), new Pair(undefined, 4),
-      new Pair(undefined, 5), new Pair(undefined, 6)
+      new Pair(1, 1),
+      new Pair(1, 2),
+      new Pair(1, 3),
+      new Pair(1, 4),
+      new Pair(1, 5),
+      new Pair(1, 6),
+      new Pair(2, 1),
+      new Pair(2, 2),
+      new Pair(2, 3),
+      new Pair(2, 4),
+      new Pair(2, 5),
+      new Pair(2, 6),
+      new Pair(undefined, 1),
+      new Pair(undefined, 2),
+      new Pair(undefined, 3),
+      new Pair(undefined, 4),
+      new Pair(undefined, 5),
+      new Pair(undefined, 6)
     ];
 
     var actual = _.sortBy(collection, function(pair) {
@@ -597,13 +645,15 @@ describe('flatten', function() {
   it('can flatten nested arrays', function() {
     var nestedArray = [1, [2], [3, [[[4]]]]];
 
-    expect(_.flatten(nestedArray)).to.eql([1,2,3,4]);
+    expect(_.flatten(nestedArray)).to.eql([1, 2, 3, 4]);
   });
 });
 
 describe('zip', function() {
   it('should zip together arrays of different lengths', function() {
-    var names = ['moe', 'larry', 'curly'], ages = [30, 40, 50], leaders = [true];
+    var names = ['moe', 'larry', 'curly'],
+      ages = [30, 40, 50],
+      leaders = [true];
 
     expect(_.zip(names, ages, leaders)).to.eql([
       ['moe', 30, true],
@@ -624,9 +674,9 @@ describe('intersection', function() {
 
 describe('difference', function() {
   it('should return the difference between two arrays', function() {
-    var diff = _.difference([1,2,3], [2,30,40]);
+    var diff = _.difference([1, 2, 3], [2, 30, 40]);
 
-    expect(diff).to.eql([1,3]);
+    expect(diff).to.eql([1, 3]);
   });
 
   it('should return the difference between three arrays', function() {
@@ -636,7 +686,7 @@ describe('difference', function() {
   });
 });
 
-describe("throttle", function() {
+describe('throttle', function() {
   it('throttled functions should only be able to be called again after the specified time', function(done) {
     var counter = 0;
     var incr = function() {
@@ -653,7 +703,7 @@ describe("throttle", function() {
     }, 64);
   });
 
-  it("throttled functions return their value", function(done) {
+  it('throttled functions return their value', function(done) {
     var counter = 0;
     var incr = function() {
       return ++counter;
@@ -667,7 +717,7 @@ describe("throttle", function() {
     }, 64);
   });
 
-  it("throttled functions called repeatedly should adhere to time limitations", function(done) {
+  it('throttled functions called repeatedly should adhere to time limitations', function(done) {
     var counter = 0;
     var incr = function() {
       return ++counter;
@@ -692,5 +742,5 @@ describe("throttle", function() {
       expect(results[5]).to.eql(3);
       done();
     }, 192);
-  })
+  });
 });
