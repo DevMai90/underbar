@@ -237,7 +237,7 @@ describe('reduce', function() {
     var total = _.reduce([1, 2, 3], add);
     // Updated test
     // expect(total).to.equal(7);
-    expect(total).to.equal(7);
+    expect(total).to.equal(6);
   });
 });
 

@@ -175,10 +175,16 @@ var _ = {};
   // Updated spec
   _.reduce = function(collection, iterator, accumulator) {
     // Fix it. FIX IT
-    if (accumulator === undefined) accumulator = collection[0];
-    _.each(collection, item => {
-      accumulator = iterator(accumulator, item);
-    });
+    if (accumulator === undefined) {
+      accumulator = collection[0];
+      _.each(collection.slice(1), item => {
+        accumulator = iterator(accumulator, item);
+      });
+    } else {
+      _.each(collection, item => {
+        accumulator = iterator(accumulator, item);
+      });
+    }
 
     return accumulator;
   };
